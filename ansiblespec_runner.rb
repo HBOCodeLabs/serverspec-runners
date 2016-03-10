@@ -12,6 +12,7 @@ config = {}
 config[:color] = false
 config[:format] = "documentation"
 config[:default_path] = ""
+config[:rspec_path] = ""
 version = false
 
 # parse arguments
@@ -22,7 +23,7 @@ ARGV.options do |opts|
   opts.on("-f", "--format FORMATTER", String) { |val| config[:format] = val }
   opts.on("", "--default-path PATH", String) { |val| config[:default_path] = val } 
   opts.on("-v", "--version")              { version = true }
-  opts.on("-P", "")              { }
+  opts.on("", "--rspec-path PATH", String) { |val| config[:rspec_path] = "#{val}/" } 
   opts.parse!
 end
 
@@ -89,11 +90,10 @@ end
 ENV['LOGIN_USER'] = user
 ENV['SSH_KEY'] = ssh_key
 
-rspec_path = ''
 if sudo == 'true' 
-  rspec_cmd = " sudo -E #{rspec_path}rspec"
+  rspec_cmd = " sudo -E #{config[:rspec_path]}rspec"
 else
-  rspec_cmd = "#{rspec_path}rspec"
+  rspec_cmd = "#{config[:rspec_path]}rspec"
 end 
 
 properties.keys.each do |key|

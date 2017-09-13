@@ -109,7 +109,7 @@ properties.keys.each do |key|
   require = nil
   require = "--require #{config[:require]}" if config[:require]
   puts "-----> Running: #{rspec_cmd} #{color} #{require} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
-  system "#{rspec_cmd} #{color} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}" 
+  system "#{rspec_cmd} #{color} #{require} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
 end
 
  

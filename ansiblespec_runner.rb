@@ -13,7 +13,7 @@ config[:color] = false
 config[:format] = "documentation"
 config[:default_path] = ""
 config[:rspec_path] = ""
-config[:require] = ""
+config[:require] = false
 version = false
 
 # parse arguments

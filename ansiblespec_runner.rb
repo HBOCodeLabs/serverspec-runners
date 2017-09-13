@@ -106,10 +106,10 @@ properties.keys.each do |key|
   s = "#{kitchen_path}/roles/{" + properties[key][:roles].join(',') + '}/spec/*_spec.rb'
   color = nil 
   color = '-c' if config[:color]
-  require = nil
-  require = "--require #{config[:require]}" if config[:require]
-  puts "-----> Running: #{rspec_cmd} #{color} #{require} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
-  system "#{rspec_cmd} #{color} #{require} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
+  require_param = nil
+  require_param = "--require #{config[:require]}" if config[:require]
+  puts "-----> Running: #{rspec_cmd} #{color} #{require_param} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
+  system "#{rspec_cmd} #{color} #{require_param} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
 end
 
  

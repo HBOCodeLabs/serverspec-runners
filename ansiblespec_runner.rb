@@ -13,6 +13,7 @@ config[:color] = false
 config[:format] = "documentation"
 config[:default_path] = ""
 config[:rspec_path] = ""
+config[:require] = ""
 version = false
 
 # parse arguments
@@ -23,7 +24,8 @@ ARGV.options do |opts|
   opts.on("-f", "--format FORMATTER", String) { |val| config[:format] = val }
   opts.on("", "--default-path PATH", String) { |val| config[:default_path] = val } 
   opts.on("-v", "--version")              { version = true }
-  opts.on("", "--rspec-path PATH", String) { |val| config[:rspec_path] = "#{val}/" } 
+  opts.on("", "--rspec-path PATH", String) { |val| config[:rspec_path] = "#{val}/" }
+  opts.on("", "--require REQUIRE", String) { |val| config[:require] = val }
   opts.parse!
 end
 
@@ -103,8 +105,10 @@ properties.keys.each do |key|
   ENV['TARGET_HOST'] = properties[key][:host]
   s = "#{kitchen_path}/roles/{" + properties[key][:roles].join(',') + '}/spec/*_spec.rb'
   color = nil 
-  color = '-c' if config[:color] 
-  puts "-----> Running: #{rspec_cmd} #{color} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
+  color = '-c' if config[:color]
+  require = nil
+  require = "--require #{config[:require]}" if config[:require]
+  puts "-----> Running: #{rspec_cmd} #{color} #{require} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
   system "#{rspec_cmd} #{color} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}" 
 end
 

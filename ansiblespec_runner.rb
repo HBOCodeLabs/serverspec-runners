@@ -113,7 +113,7 @@ properties.keys.each do |key|
   puts "-----> Running: #{rspec_cmd} #{color} #{require_param} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
   system "#{rspec_cmd} #{color} #{require_param} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
   if $?.exitstatus > 0
-    exit_code = $?.exitstatus
+    exit_code = 1
 end
 
 exit exit_code

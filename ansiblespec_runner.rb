@@ -114,6 +114,7 @@ properties.keys.each do |key|
   system "#{rspec_cmd} #{color} #{require_param} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
   if $?.exitstatus > 0
     exit_code = 1
+  end
 end
 
 exit exit_code

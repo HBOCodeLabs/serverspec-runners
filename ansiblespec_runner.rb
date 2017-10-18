@@ -98,6 +98,8 @@ else
   rspec_cmd = "#{config[:rspec_path]}rspec"
 end 
 
+exit_code = 0
+
 properties.keys.each do |key|
   #desc "Run serverspec #{key} for #{properties[key][:host]}"
   puts "-----> Run serverspec #{key} for host: #{properties[key][:host]} roles: #{properties[key][:roles]}" 
@@ -110,6 +112,10 @@ properties.keys.each do |key|
   require_param = "--require #{config[:require]}" if config[:require]
   puts "-----> Running: #{rspec_cmd} #{color} #{require_param} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
   system "#{rspec_cmd} #{color} #{require_param} -f #{config[:format]} --default-path  #{config[:default_path]} -P #{s}"
+  if $?.exitstatus > 0
+    exit_code = $?.exitstatus
 end
+
+exit exit_code
 
  

@@ -79,6 +79,9 @@ playbook_file.each do |item|
         cmd += " --vault-password-file #{config[:vault_password_file]}"
       end
       `#{cmd}`.lines do |line|
+          if /hosts \(\d+\):/.match(line)
+            next
+          end
           keys += 1
           properties["host_#{keys}"] = {:host => line.strip, :roles => ansible_roles}
           puts "group: #{h} host: #{line.strip!} roles: #{ansible_roles}"

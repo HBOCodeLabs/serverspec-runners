@@ -87,7 +87,6 @@ playbook_file.each do |item|
           puts "group: #{h} host: #{line.strip!} roles: #{ansible_roles}"
           hostnames = true
       end
-    rescue
     end
     if !hostnames
       keys += 1

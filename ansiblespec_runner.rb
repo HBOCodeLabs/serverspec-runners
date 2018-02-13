@@ -14,6 +14,7 @@ config[:format] = "documentation"
 config[:default_path] = ""
 config[:rspec_path] = ""
 config[:require] = false
+config[:vault_password_file] = ""
 version = false
 
 # parse arguments
@@ -26,6 +27,7 @@ ARGV.options do |opts|
   opts.on("-v", "--version")              { version = true }
   opts.on("", "--rspec-path PATH", String) { |val| config[:rspec_path] = "#{val}/" }
   opts.on("", "--require REQUIRE", String) { |val| config[:require] = val }
+  opts.on("", "--vault-password-file VAULTPASS", String) { |val| config[:vault_password_file] = val }
   opts.parse!
 end
 
@@ -72,11 +74,15 @@ playbook_file.each do |item|
   hostnames = false
   ansible_hosts.each do |h|
     begin
-      `ansible #{h} --list-hosts -i #{kitchen_path}/#{inventoryfile}`.lines do |line|
-        keys += 1
-        properties["host_#{keys}"] = {:host => line.strip, :roles => ansible_roles}
-        puts "group: #{h} host: #{line.strip!} roles: #{ansible_roles}"
-        hostnames = true
+      cmd = "ansible #{h} --list-hosts -i #{kitchen_path}/#{inventoryfile}"
+      if config[:vault_password_file] != ""
+        cmd += " --vault-password-file #{config[:vault_password_file]}"
+      end
+      `#{cmd}`.lines do |line|
+          keys += 1
+          properties["host_#{keys}"] = {:host => line.strip, :roles => ansible_roles}
+          puts "group: #{h} host: #{line.strip!} roles: #{ansible_roles}"
+          hostnames = true
       end
     rescue
     end

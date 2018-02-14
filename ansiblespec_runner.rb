@@ -12,6 +12,7 @@ config = {}
 config[:color] = false
 config[:format] = "documentation"
 config[:default_path] = ""
+config[:ansible_path] = ""
 config[:rspec_path] = ""
 config[:require] = false
 config[:vault_password_file] = ""
@@ -24,6 +25,7 @@ ARGV.options do |opts|
   opts.on("-c", "--color")              { config[:color] = true }
   opts.on("-f", "--format FORMATTER", String) { |val| config[:format] = val }
   opts.on("", "--default-path PATH", String) { |val| config[:default_path] = val } 
+  opts.on("", "--ansible-path PATH", String) { |val| config[:ansible_path] = val }
   opts.on("-v", "--version")              { version = true }
   opts.on("", "--rspec-path PATH", String) { |val| config[:rspec_path] = "#{val}/" }
   opts.on("", "--require REQUIRE", String) { |val| config[:require] = val }
@@ -68,13 +70,18 @@ playbook_file = YAML.load_file("#{kitchen_path}/#{playbook}")
 properties = {}
 keys = 0
 
+ansible_bin = "ansible"
+if config[:ansible_path] != ""
+  ansible_bin = "#{config[:ansible_path]}/ansible"
+end
+
 playbook_file.each do |item|
   ansible_hosts = item['hosts'].split(',')
   ansible_roles = item['roles']
   hostnames = false
   ansible_hosts.each do |h|
     begin
-      cmd = "ansible #{h} --list-hosts -i #{kitchen_path}/#{inventoryfile}"
+      cmd = "#{ansible_bin} #{h} --list-hosts -i #{kitchen_path}/#{inventoryfile}"
       if config[:vault_password_file] != ""
         cmd += " --vault-password-file #{config[:vault_password_file]}"
       end

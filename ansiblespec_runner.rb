@@ -55,8 +55,9 @@ if ENV['SSH_KEY']
 end
 login_password = nil
 login_password = ENV['LOGIN_PASSWORD'] if ENV['LOGIN_PASSWORD']
+bin_path = ENV['PATH']
 
-puts "BASE_PATH: #{base_path}, KITCHEN_PATH #{kitchen_path}, PLAYBOOK: #{playbook}, INVENTORY: #{inventoryfile}, LOGIN_USER: #{user}, SSH_KEY: #{ssh_key}, LOGIN_PASSWORD: #{login_password}"
+puts "BASE_PATH: #{base_path}, KITCHEN_PATH #{kitchen_path}, PLAYBOOK: #{playbook}, INVENTORY: #{inventoryfile}, LOGIN_USER: #{user}, SSH_KEY: #{ssh_key}, LOGIN_PASSWORD: #{login_password}, PATH: #{bin_path}"
 
 if File.exist?("#{kitchen_path}/#{playbook}") == false
   puts "Error: #{playbook} is not Found at #{kitchen_path}."

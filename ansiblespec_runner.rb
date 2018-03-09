@@ -81,7 +81,7 @@ playbook_file.each do |item|
   hostnames = false
   ansible_hosts.each do |h|
     begin
-      cmd = "#{ansible_bin} #{h} --list-hosts -i #{kitchen_path}/#{inventoryfile}"
+      cmd = "/usr/local/bin/ansible #{h} --list-hosts -i #{kitchen_path}/#{inventoryfile}"
       if config[:vault_password_file] != ""
         cmd += " --vault-password-file #{config[:vault_password_file]}"
       end

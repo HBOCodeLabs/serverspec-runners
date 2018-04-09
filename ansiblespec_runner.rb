@@ -68,6 +68,13 @@ keys = 0
 
 playbook_file.each do |item|
   ansible_hosts = item['hosts'].split(',')
+  ansible_roles = []
+  item['roles'].each so |role|
+    if role.respond_to? :to_str
+        ansible_roles.push(role)
+    else
+        ansible_roles.push(role['role'])
+    end
   ansible_roles = item['roles']
   hostnames = false
   ansible_hosts.each do |h|

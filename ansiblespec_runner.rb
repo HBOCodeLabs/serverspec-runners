@@ -1,5 +1,5 @@
 #
-# ansiblespec runner 
+# ansiblespec runner
 #
 $stderr.sync = true
 require 'optparse'
@@ -19,12 +19,12 @@ config[:vault_password_file] = ""
 version = false
 
 # parse arguments
-# ignore -P argument 
+# ignore -P argument
 file = __FILE__
 ARGV.options do |opts|
   opts.on("-c", "--color")              { config[:color] = true }
   opts.on("-f", "--format FORMATTER", String) { |val| config[:format] = val }
-  opts.on("", "--default-path PATH", String) { |val| config[:default_path] = val } 
+  opts.on("", "--default-path PATH", String) { |val| config[:default_path] = val }
   opts.on("", "--ansible-path PATH", String) { |val| config[:ansible_path] = val }
   opts.on("-v", "--version")              { version = true }
   opts.on("", "--rspec-path PATH", String) { |val| config[:rspec_path] = "#{val}/" }
@@ -79,13 +79,13 @@ playbook_file.each do |item|
   ansible_hosts = item['hosts'].split(',')
   ansible_roles = []
   item['roles'].each do |role|
-    if role.respond_to? :to_str
-        ansible_roles.push(role)
-    else
+    if role.is_a?(Hash)
         ansible_roles.push(role['role'])
+    else
+        ansible_roles.push(role)
     end
   end
-  ansible_roles = item['roles']
+  ansible_roles = ansible_roles.uniq
   hostnames = false
   ansible_hosts.each do |h|
     begin
@@ -111,25 +111,25 @@ playbook_file.each do |item|
   end
 end
 
-# Environment variable TARGET_HOST, LOGIN_USER, LOGIN_PASSWORD, SSH_KEY are specified in the spec_helper  
+# Environment variable TARGET_HOST, LOGIN_USER, LOGIN_PASSWORD, SSH_KEY are specified in the spec_helper
 ENV['LOGIN_USER'] = user
 ENV['SSH_KEY'] = ssh_key
 
-if sudo == 'true' 
+if sudo == 'true'
   rspec_cmd = " sudo -E #{config[:rspec_path]}rspec"
 else
   rspec_cmd = "#{config[:rspec_path]}rspec"
-end 
+end
 
 exit_code = 0
 
 properties.keys.each do |key|
   #desc "Run serverspec #{key} for #{properties[key][:host]}"
-  puts "-----> Run serverspec #{key} for host: #{properties[key][:host]} roles: #{properties[key][:roles]}" 
-  # Environment variable TARGET_HOST, LOGIN_USER, LOGIN_PASSWORD, SSH_KEY are specified in the spec_helper 
+  puts "-----> Run serverspec #{key} for host: #{properties[key][:host]} roles: #{properties[key][:roles]}"
+  # Environment variable TARGET_HOST, LOGIN_USER, LOGIN_PASSWORD, SSH_KEY are specified in the spec_helper
   ENV['TARGET_HOST'] = properties[key][:host]
   s = "#{kitchen_path}/roles/{" + properties[key][:roles].join(',') + '}/spec/*_spec.rb'
-  color = nil 
+  color = nil
   color = '-c' if config[:color]
   require_param = nil
   require_param = "--require #{config[:require]}" if config[:require]
@@ -141,5 +141,3 @@ properties.keys.each do |key|
 end
 
 exit exit_code
-
- 

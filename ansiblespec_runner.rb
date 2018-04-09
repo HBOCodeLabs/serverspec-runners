@@ -84,6 +84,7 @@ playbook_file.each do |item|
     else
         ansible_roles.push(role['role'])
     end
+  end
   ansible_roles = item['roles']
   hostnames = false
   ansible_hosts.each do |h|
